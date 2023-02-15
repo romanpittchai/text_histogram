@@ -1,7 +1,9 @@
+import os
+
 def input_or_file() -> bool:
     """Selecting a text input method."""
-    print('"0" - for standard input;')
-    print('"1" - for input from a text file;')
+    print('"1" - for standard input;')
+    print('"0" - for input from a text file;')
     select: str = input('--> ')
     tuple_select: tuple = ('0', '1', 'exit')
     select_return: bool = False
@@ -26,7 +28,7 @@ def input_text() -> list:
     """
     list_for_txt: list = list()
     while True:
-        string: str = input().replace(' ', '')
+        string: str = input('--> ').replace(' ', '')
         if string.strip() == '':
             break
         else:
@@ -39,6 +41,27 @@ def file_text() -> list:
     Reads text from a file and strips it of spaces.
     Returns a list of elements.
     """
+    path_file: str = input('input file path: ')
+    while True:
+        if path_file == 'exit':
+            quit()
+        elif os.path.exists(path_file):
+            list_for_txt: list = list()
+            try:
+                file_text: str = open(path_file, "r")
+                file_text_r = file_text.read()
+                file_text.close()
+                file_text_r: str = file_text_r.replace(' ', '')
+                file_text_r: str = file_text_r.replace('\n', '')
+                list_for_txt.extend(list(file_text_r))
+                return list_for_txt
+            except FileNotFoundError as error:
+                print(f'There is no such file or directory! {error}')
+                path_file: str = input('input file path: ')
+        elif not os.path.exists(path_file):
+            print('There is no such file or directory!')
+            path_file: str = input('input file path: ')
+        
 
 
 def handler_list_elem(list_elem: list) -> list:
@@ -52,7 +75,7 @@ def handler_list_elem(list_elem: list) -> list:
     list_elem.clear()
     for i in string_non_full:
         list_elem.append(string.count(i))
-    print(list_elem)
+    count_litera_dict(list_elem, string_non_full)
     list_elem_copy.clear()
     list_elem_copy.append([])
     list_elem_copy[0].extend(string_non_full)
@@ -75,8 +98,22 @@ def output_result(list_elem: list) -> None:
     """
     Outputs the result to the console and a file with the .txt format.
     """
+    list_elem_file = open('output.txt', "a")
     for elem in list_elem:
         print(*elem)
+        unpack_elem: str = ''.join(elem)
+        list_elem_file.write(f'{unpack_elem}' + '\n')
+    list_elem_file.close()
+
+
+def count_litera_dict(list_elem: list, string_non_full: str):
+    """."""
+    count_litera = dict(zip(list_elem, list(string_non_full)))
+    count_litera_file = open('output.txt', "a")
+    for key, value in count_litera.items():
+        print(f'{key} - {value}')
+        count_litera_file.write(f'{key} - {value}' + '\n')
+    count_litera_file.close()
 
 def main() -> None:
     """The main logic of work."""
