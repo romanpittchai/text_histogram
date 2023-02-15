@@ -35,7 +35,7 @@ def input_text() -> list:
         else:
             list_for_txt.extend(list(string))
     return list_for_txt
-    
+
 
 def file_text() -> list:
     """
