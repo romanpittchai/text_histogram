@@ -1,5 +1,6 @@
 import os
 
+
 def input_or_file() -> bool:
     """Selecting a text input method."""
     print('"1" - for standard input;')
@@ -34,7 +35,7 @@ def input_text() -> list:
         else:
             list_for_txt.extend(list(string))
     return list_for_txt
-
+    
 
 def file_text() -> list:
     """
@@ -48,20 +49,19 @@ def file_text() -> list:
         elif os.path.exists(path_file):
             list_for_txt: list = list()
             try:
-                file_text: str = open(path_file, "r")
-                file_text_r = file_text.read()
+                file_text = open(path_file, "r")
+                file_text_r: str = file_text.read()
                 file_text.close()
                 file_text_r: str = file_text_r.replace(' ', '')
                 file_text_r: str = file_text_r.replace('\n', '')
                 list_for_txt.extend(list(file_text_r))
                 return list_for_txt
-            except FileNotFoundError as error:
+            except (FileNotFoundError, IsADirectoryError) as error:
                 print(f'There is no such file or directory! {error}')
                 path_file: str = input('input file path: ')
         elif not os.path.exists(path_file):
             print('There is no such file or directory!')
             path_file: str = input('input file path: ')
-        
 
 
 def handler_list_elem(list_elem: list) -> list:
@@ -98,22 +98,31 @@ def output_result(list_elem: list) -> None:
     """
     Outputs the result to the console and a file with the .txt format.
     """
-    list_elem_file = open('output.txt', "a")
+    list_elem_file = open('output_gisto.txt', "a")
+    print('*' * 20)
+    list_elem_file.write(('*' * 20) + '\n')
     for elem in list_elem:
         print(*elem)
         unpack_elem: str = ''.join(elem)
         list_elem_file.write(f'{unpack_elem}' + '\n')
+    print('*' * 20)
+    list_elem_file.write(('*' * 20) + '\n')
     list_elem_file.close()
 
 
-def count_litera_dict(list_elem: list, string_non_full: str):
-    """."""
-    count_litera = dict(zip(list_elem, list(string_non_full)))
-    count_litera_file = open('output.txt', "a")
+def count_litera_dict(list_elem: list, string_non_full: str) -> None:
+    """Output to the console and a file of letters and their number."""
+    count_litera: dict = dict(zip(list(string_non_full), list_elem))
+    count_litera_file = open('output_count.txt', "a")
+    print('---------')
+    count_litera_file.write('---------' + '\n')
     for key, value in count_litera.items():
-        print(f'{key} - {value}')
-        count_litera_file.write(f'{key} - {value}' + '\n')
+        print(f'| {key} - {value} |')
+        count_litera_file.write(f'| {key} - {value} |' + '\n')
+    print('---------')
+    count_litera_file.write('---------' + '\n')
     count_litera_file.close()
+
 
 def main() -> None:
     """The main logic of work."""
@@ -124,6 +133,7 @@ def main() -> None:
         list_elem: list = file_text()
     result: list = handler_list_elem(list_elem)
     output_result(result)
+
 
 if __name__ == '__main__':
     main()
